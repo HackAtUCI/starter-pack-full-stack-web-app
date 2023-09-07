@@ -20,12 +20,14 @@ You should create a Python virtual environment so that the packages installed
 don't conflict with the ones on your main system by running:
 
 ### Windows
+
 ```ps
 > python -m venv .venv
 > .\.venv\Scripts\activate
 ```
 
 ### MacOS/Unix
+
 ```bash
 $ python3 -m venv .venv
 $ source .venv/bin/activate
@@ -45,5 +47,5 @@ python3 main.py
 
 Congratulations! You've successfully started up a FastAPI backend.
 
-To read more about FastAPI, refer to the documentation:
-https://fastapi.tiangolo.com/.
+To read more about FastAPI, refer to the
+[FastAPI documentation](https://fastapi.tiangolo.com/).
