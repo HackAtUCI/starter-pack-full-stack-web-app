@@ -8,7 +8,7 @@ We'll begin by downloading everything we need to create a new React application.
 
 ### Windows
 
-To use React, we first need to download Node.js and npm (Node Package Manager), which you can download Node.js from its [official website](https://nodejs.org/en/download/). After downloading and installing, make sure everything is up-to-date by running these commands:
+To use React, we first need to download Node.js and npm (Node Package Manager). You can download both from its [official website](https://nodejs.org/en/download/). After downloading and installing, make sure everything is up-to-date by running these commands:
 
 ```
 node -v
@@ -38,7 +38,7 @@ Open http://localhost:3000/ in your browser to view your project.
 
 ### MacOS
 
-To use React, we first need to download Node.js and npm (Node Package Manager). You can download Node.js from its [official website](https://nodejs.org/en/download/). After downloading and installing, make sure everything is up-to-date by running these commands in your terminal:
+To use React, we first need to download Node.js and npm (Node Package Manager). You can download both from its [official website](https://nodejs.org/en/download/). After downloading and installing, make sure everything is up-to-date by running these commands in your terminal:
 
 ```
 node -v
