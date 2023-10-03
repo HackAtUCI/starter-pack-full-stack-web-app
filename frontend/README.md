@@ -30,7 +30,7 @@ npx create-vite@latest my-app --template react
 <br>
 Now your project is created! Navigate to your current project's directory with: 
 ```
-cd my-app-name
+cd my-app
 ```
 <br>
 To begin running your project, use:
