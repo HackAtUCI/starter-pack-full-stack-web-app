@@ -17,6 +17,9 @@ export default defineConfig({
       then your request will be sent to `http://127.0.0.1:5000/` and you'll see
       the response returned by that route. (Note that that the URL in your
       browser's address will remain `http://localhost:5173/api`.)
+
+      If you've ever dealt with CORS errors when making requests from your
+      frontend to your backend, this will prevent those from happening!
       */
 			"/api": {
 				target: "http://127.0.0.1:5000",
