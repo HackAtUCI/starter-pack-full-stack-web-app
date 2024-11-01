@@ -22,7 +22,7 @@ export default defineConfig({
       frontend to your backend, this will prevent those from happening!
       */
 			"/api": {
-				target: "http://127.0.0.1:5000",
+				target: "http://127.0.0.1:8000",
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, ""),
 			},

@@ -42,7 +42,7 @@ pip install -r requirements.txt
 Finally, start the server:
 
 ```bash
-python3 main.py
+fastapi dev src/api.py
 ```
 
 Congratulations! You've successfully started up a FastAPI backend.

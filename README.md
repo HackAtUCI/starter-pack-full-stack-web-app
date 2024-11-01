@@ -55,3 +55,5 @@ as the name implies, very fast.
 
 For a deeper explanation on these two frameworks, please view the `README.md`s in
 `frontend/` and `backend/`.
+
+For deploying this app to the internet, see [DEPLOYMENT.md](DEPLOYMENT.md).
