@@ -4,11 +4,11 @@ app.py
 This one file is all you need to start off with your FastAPI server!
 """
 
+import random
 from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, status
-
 
 # Initializing and setting configurations for your FastAPI application is one
 # of the first things you should do in your code.
@@ -54,7 +54,9 @@ def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
 
-# TODO: Add POST route for demo
+@app.get("/get-random")
+def get_random_item():
+    return {"item_id": random.randint(0, 1000)}
 
 
 if __name__ == "__main__":
