@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -12,6 +12,22 @@ With App.jsx, we can also define global variables and routes to store informatio
 */
 function App() {
 	const [count, setCount] = useState(0);
+	const [randomItem, setRandomItem] = useState(null);
+
+	async function getRandomItem() {
+		/*
+		You can access 
+		*/
+
+		const randInt = Math.floor(Math.random() * 1000);
+		const res = await fetch(`/api/items/${randInt}`);
+		const json = await res.json();
+		setRandomItem(json["item_id"]);
+	}
+
+	useEffect(() => {
+		getRandomItem();
+	}, []);
 
 	return (
 		<>
@@ -29,6 +45,9 @@ function App() {
 				<p>
 					Edit <code>src/App.jsx</code> and save to test HMR
 				</p>
+				{randomItem && (
+					<p>The item retrieved from the backend has an ID of {randomItem}</p>
+				)}
 			</div>
 			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
 		</>
