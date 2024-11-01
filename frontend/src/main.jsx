@@ -7,7 +7,7 @@ import "./index.css";
 This code renders our project so it can be viewed in a browser. 
 */
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+	<React.StrictMode>
+		<App />
+	</React.StrictMode>
 );
