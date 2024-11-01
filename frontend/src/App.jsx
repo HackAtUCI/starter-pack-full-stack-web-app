@@ -25,8 +25,7 @@ function App() {
 		where we display it in our JSX below.
 		*/
 
-		const randInt = Math.floor(Math.random() * 1000);
-		const res = await fetch(`/api/items/${randInt}`);
+		const res = await fetch(`/api/get-random`);
 		const json = await res.json();
 		setRandomItem(json["item_id"]);
 	}
