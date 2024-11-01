@@ -1,0 +1,14 @@
+{
+	"installCommand": "cd frontend && npm ci",
+	"buildCommand": "cd frontend && npm run build && cd .. && cp backend/requirements.txt .",
+	"outputDirectory": "frontend/dist",
+	"functions": {
+		"api/index.py": {
+			"excludeFiles": "{!(*.py),@(bin|frontend)/**,backend/{*,!(src)/**}}"
+		}
+	},
+	"rewrites": [{ "source": "/api/:path*", "destination": "/api/" }],
+	"env": {
+		"PYTHONPATH": "backend/src"
+	}
+}
