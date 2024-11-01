@@ -1,0 +1,33 @@
+"""
+This app puts together the frontend UI and backend API for deployment.
+For local development, the app for just the API should be run on its own:
+$ fastapi dev src/api.py
+"""
+
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+import api
+
+PUBLIC_DIRECTORY = Path("public")
+
+# Create a main app under which the API will be mounted as a sub-app
+app = FastAPI()
+
+# Send all requests to paths under `/api/*` to the API router
+app.mount("/api/", api.app)
+
+
+@app.get("/")
+async def root() -> FileResponse:
+    """Provide the frontend on any other requested path."""
+    return FileResponse(PUBLIC_DIRECTORY / "index.html")
+
+
+# Make the public files (e.g. `index.html`) accessible on the server
+app.mount("/", StaticFiles(directory=PUBLIC_DIRECTORY), name="public")
+
+# TODO: add support for client-side routing
