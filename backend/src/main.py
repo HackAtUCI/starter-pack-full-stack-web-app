@@ -2,6 +2,12 @@
 This app puts together the frontend UI and backend API for deployment.
 For local development, the app for just the API should be run on its own:
 $ fastapi dev src/api.py
+
+The provided Dockerfile will handle putting everything together for deployment.
+When used, the application bundle from building the React app with `npm run build`
+is placed at the public directory defined below for FastAPI to serve as static assets.
+That means any requests for existing files will be served the contents of those files,
+and any requests for the API paths will be sent to the API routes defined in the API.
 """
 
 from pathlib import Path
