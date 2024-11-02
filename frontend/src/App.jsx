@@ -17,17 +17,15 @@ function App() {
 	async function getRandomItem() {
 		/*
 		Because of the server proxy we set up in our Vite config, there's no
-		more need to specify the direct path to your backend! Simply provide
-		the path that your proxy is set up on and Vite will automatically
-		proxy these requests to the backend!
+		more need to specify the direct path to your backend! Just use `/api/`.
 
 		We query the backend and store its response into a state variable,
 		where we display it in our JSX below.
 		*/
 
 		const res = await fetch(`/api/get-random`);
-		const json = await res.json();
-		setRandomItem(json["item_id"]);
+		const data = await res.json();
+		setRandomItem(data["item_id"]);
 	}
 
 	useEffect(() => {
@@ -52,8 +50,8 @@ function App() {
 				</p>
 
 				{/* Here's a trick you can use! If you want to render a JSX element only when a
-				state variable becomes not `null` (or by extension, not falsy), you can do a short
-				circuit operation with `&&`. */}
+				state variable becomes not `null` (i.e. truthy), you can do a short circuit
+				operation with `&&`. */}
 				{randomItem && (
 					<p>The item retrieved from the backend has an ID of {randomItem}</p>
 				)}
