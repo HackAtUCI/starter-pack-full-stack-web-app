@@ -14,11 +14,12 @@ and any requests for the API paths will be sent to the API routes defined in the
 
 from pathlib import Path
 
-import api
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+
+import api
 
 PUBLIC_DIRECTORY = Path("public")
 
@@ -39,7 +40,12 @@ async def root() -> FileResponse:
 app.mount("/", StaticFiles(directory=PUBLIC_DIRECTORY), name="public")
 
 
-# TODO: add support for client-side routing
 @app.exception_handler(status.HTTP_404_NOT_FOUND)
 async def not_found(req: Request, exc: HTTPException) -> FileResponse:
+    """
+    Redirect all other requests not directed to `/api/` or `/` back to the
+    frontend. The frontend is packaged and copied over to the Docker
+    container as part of the FastAPI application, so this `FileResponse`
+    will send the request back to the frontend.
+    """
     return FileResponse(PUBLIC_DIRECTORY / "index.html")
