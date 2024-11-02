@@ -27,7 +27,30 @@ static sites, databases, and more. The free Hobby tier is great for small person
 
 ## Deploying on Vercel
 
-coming soon ...
+[Vercel](https://vercel.com) is a cloud platform for creating and deploying web applications.
+The provided configuration in [`vercel.json`](vercel.json) specifies how this full-stack app
+can be deployed directly to Vercel.
+
+To deploy this project, follow the directions to
+[import an existing project](https://vercel.com/docs/getting-started-with-vercel/import)
+or [deploy to Vercel with Vercel CLI](https://vercel.com/docs/deployments/deploy-with-vercel-cli)
+from the root directory of the repository.
+
+```shell
+vercel
+```
+
+The application bundle from the React app will be served as static assets,
+and the API will be deployed as a [Vercel Function](https://vercel.com/docs/functions).
+
+If additional data files need to be included with the API deployment,
+e.g. a `configuration` folder next to `src`,
+then the `excludeFiles` property in `vercel.json` will need to be updated accordingly.
+
+```diff
+-"excludeFiles": "{!(*.py),@(bin|frontend)/**,backend/{*,!(src)/**}}"
++"excludeFiles": "{!(*.py),@(bin|frontend)/**,backend/{*,!(src|configuration)/**}}"
+```
 
 ## Other Platforms
 

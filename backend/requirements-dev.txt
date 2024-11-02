@@ -1,0 +1,2 @@
+fastapi-cli[standard]
+uvicorn[standard]

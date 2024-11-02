@@ -36,7 +36,7 @@ $ source .venv/bin/activate
 Once you've created the virtual environment, install the libraries:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 Finally, start the server:

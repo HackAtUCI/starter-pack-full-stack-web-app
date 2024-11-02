@@ -19,7 +19,7 @@ WORKDIR /code/
 
 # Install dependencies
 COPY backend/requirements.txt .
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt fastapi[standard]
 
 # Copy source code
 COPY backend/src/ src/

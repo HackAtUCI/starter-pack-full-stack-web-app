@@ -1,5 +1,7 @@
 """
-This app puts together the frontend UI and backend API for deployment.
+If you are deploying on Vercel, you can delete this file.
+
+This app puts together the frontend UI and backend API for deployment on Render.
 For local development, the app for just the API should be run on its own:
 $ fastapi dev src/api.py
 
