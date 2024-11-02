@@ -10,7 +10,7 @@ out, is how much FastAPI relies on type annotations. On top of making routes
 more readable for developers, FastAPI automatically validates the provided
 type annotations to ensure the parameters provided to a route are correct!
 
-This application only contains a few simple routes declared in `main.py`. We'll
+This application only contains a few simple routes declared in `api.py`. We'll
 be using these in our frontend!
 
 ## Running the Server
@@ -26,7 +26,7 @@ don't conflict with the ones on your main system by running:
 > .\.venv\Scripts\activate
 ```
 
-### MacOS/Unix
+### macOS/Unix
 
 ```bash
 $ python3 -m venv .venv
@@ -39,7 +39,7 @@ Once you've created the virtual environment, install the libraries:
 pip install -r requirements.txt -r requirements-dev.txt
 ```
 
-Finally, start the server:
+Finally, start the local development server:
 
 ```bash
 fastapi dev src/api.py
