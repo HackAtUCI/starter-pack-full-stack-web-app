@@ -14,11 +14,11 @@ and any requests for the API paths will be sent to the API routes defined in the
 
 from pathlib import Path
 
-from fastapi import FastAPI
+import api
+from fastapi import FastAPI, Request
+from fastapi.exceptions import HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-
-import api
 
 PUBLIC_DIRECTORY = Path("public")
 
@@ -38,4 +38,8 @@ async def root() -> FileResponse:
 # Make the public files (e.g. `index.html`) accessible on the server
 app.mount("/", StaticFiles(directory=PUBLIC_DIRECTORY), name="public")
 
+
 # TODO: add support for client-side routing
+@app.exception_handler(404)
+async def not_found(req: Request, exc: HTTPException) -> FileResponse:
+    return FileResponse(PUBLIC_DIRECTORY / "index.html")
