@@ -12,6 +12,11 @@ for hosting services that support building and deploying from a Dockerfile.
 Specifically, the React application bundle produced by Vite is copied to a public directory
 from which FastAPI serves static assets, i.e. the HTML, CSS, JS, and other images or data.
 
+The provided deployment configurations also support client-side routing libraries such as
+[React Router](https://reactrouter.com) or [TanStack Router](https://tanstack.com/router).
+This is done by having the frontend app served on all non-existent URL paths so that the
+single-page application (SPA) can resolve the appropriate view in the browser.
+
 ## Deploying on Render
 
 [Render](https://render.com) is a cloud application platform for hosting web services,

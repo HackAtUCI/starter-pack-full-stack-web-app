@@ -32,20 +32,23 @@ app.mount("/api/", api.app)
 
 @app.get("/")
 async def root() -> FileResponse:
-    """Provide the frontend on any other requested path."""
+    """Serve the frontend app on the root path."""
     return FileResponse(PUBLIC_DIRECTORY / "index.html")
 
 
-# Make the public files (e.g. `index.html`) accessible on the server
+# Make the public files (HTML, JS, CSS, etc.) accessible on the server
 app.mount("/", StaticFiles(directory=PUBLIC_DIRECTORY), name="public")
 
 
 @app.exception_handler(status.HTTP_404_NOT_FOUND)
 async def not_found(req: Request, exc: HTTPException) -> FileResponse:
     """
-    Redirect all other requests not directed to `/api/` or `/` back to the
-    frontend. The frontend is packaged and copied over to the Docker
-    container as part of the FastAPI application, so this `FileResponse`
-    will send the request back to the frontend.
+    Serve the frontend app for all other requests not directed to `/api/` or `/`.
+
+    This allows the single-page application to do client-side routing where the browser
+    process the URL path in the React App. Otherwise, users would see 404 Not Found when
+    navigating directly to a virtual path.
+
+    This should be removed if the frontend app does not handle different URL paths.
     """
     return FileResponse(PUBLIC_DIRECTORY / "index.html")
