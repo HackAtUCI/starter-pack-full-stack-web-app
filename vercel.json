@@ -7,7 +7,10 @@
 			"excludeFiles": "{!(*.py),@(bin|frontend)/**,backend/{*,!(src)/**}}"
 		}
 	},
-	"rewrites": [{ "source": "/api/:path*", "destination": "/api/" }],
+	"rewrites": [
+		{ "source": "/api/:path*", "destination": "/api/" },
+		{ "source": "/(.*)", "destination": "/index.html" }
+	],
 	"env": {
 		"PYTHONPATH": "backend/src"
 	}
