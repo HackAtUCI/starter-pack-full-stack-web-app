@@ -7,20 +7,20 @@ export default defineConfig({
 	server: {
 		proxy: {
 			/*
-      This block adds what's known as a proxy from your frontend to your
-      backend. Vite will take any requests that start with `/api` and forward
-      them to your backend. For example, with this setting in place, if you
-      try to access
+			This item adds what's known as a proxy from the frontend development server
+			to the backend development server. Vite will take any requests where the path
+			starts with `/api` and forward them to backend running locally on port 8000.
 
-      `http://localhost:5173/api`
+			For example, with this setting, a request to `http://localhost:5173/api/hello`
+			will be internally rerouted to `http://127.0.0.1:8000/hello`, and whatever
+			response that route gives will be provided as if the request were made there.
 
-      then your request will be sent to `http://127.0.0.1:5000/` and you'll see
-      the response returned by that route. (Note that that the URL in your
-      browser's address will remain `http://localhost:5173/api`.)
+			If you've ever dealt with CORS errors when making requests from your frontend
+			to your backend, the proxy will prevent those from happening!
 
-      If you've ever dealt with CORS errors when making requests from your
-      frontend to your backend, this will prevent those from happening!
-      */
+			Technical note: explicitly specify IPv4 since some systems have localhost
+			resolve as IPv6, but the FastAPI CLI and Uvicorn serve on IPv4 by default.
+			*/
 			"/api": {
 				target: "http://127.0.0.1:8000",
 				changeOrigin: true,

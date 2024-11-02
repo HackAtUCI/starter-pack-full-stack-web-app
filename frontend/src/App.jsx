@@ -17,7 +17,7 @@ function App() {
 	async function getRandomItem() {
 		/*
 		Because of the server proxy we set up in our Vite config, there's no
-		more need to specify the direct path to your backend! Just use `/api/`.
+		more need to specify localhost for the backend! Just use `/api/path`.
 
 		We query the backend and store its response into a state variable,
 		where we display it in our JSX below.
