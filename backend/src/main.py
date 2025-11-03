@@ -30,14 +30,9 @@ app = FastAPI()
 app.mount("/api/", api.app)
 
 
-@app.get("/")
-async def root() -> FileResponse:
-    """Serve the frontend app on the root path."""
-    return FileResponse(PUBLIC_DIRECTORY / "index.html")
-
-
 # Make the public files (HTML, JS, CSS, etc.) accessible on the server
-app.mount("/", StaticFiles(directory=PUBLIC_DIRECTORY), name="public")
+# With HTML mode, `index.html` is automatically loaded
+app.mount("/", StaticFiles(directory=PUBLIC_DIRECTORY, html=True), name="public")
 
 
 @app.exception_handler(status.HTTP_404_NOT_FOUND)
