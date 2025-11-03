@@ -1,4 +1,4 @@
-FROM node:20-slim AS client-builder
+FROM node:22-slim AS client-builder
 
 WORKDIR /code/
 
