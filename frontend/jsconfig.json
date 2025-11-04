@@ -1,0 +1,9 @@
+// Helps VS Code understand path alias
+{
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	}
+}

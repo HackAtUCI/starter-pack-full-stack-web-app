@@ -4,6 +4,12 @@ import react from "@vitejs/plugin-react-swc";
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [react()],
+	resolve: {
+		alias: {
+			// Set alias to use absolute imports (instead of relative)
+			"@/": "/src/",
+		},
+	},
 	server: {
 		proxy: {
 			/*

@@ -21,24 +21,11 @@ async def hello() -> dict[str, str]:
     return {"message": "Hello from FastAPI"}
 
 
-# The routes that you specify can also be dynamic, which means that any path
-# that follows the format `/items/[some integer]` is valid. When providing
-# such path parameters, you'll need to follow this specific syntax and state
-# the type of this argument.
-#
-# This path also includes an optional query parameter called "q". By accessing
-# the URL "/items/123456?q=testparam", the JSON response:
-#
-# { "item_id": 123456, "q": "testparam" }
-#
-# will be returned. Note that if `item_id` isn't an integer, FastAPI will
-# return a response containing an error statement instead of our result.
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: str | None = None) -> dict[str, int | str | None]:
-    return {"item_id": item_id, "q": q}
-
-
-@app.get("/get-random")
-async def get_random_item() -> dict[str, int]:
+# The route can also handle query parameters encoded in the URL after the path,
+# e.g. `/random?maximum=1000`
+# If the value isn't an integer, FastAPI will return an error response
+# with a validation error describing the invalid input.
+@app.get("/random")
+async def get_random_item(maximum: int) -> dict[str, int]:
     """Get an item with a random ID."""
-    return {"item_id": random.randint(0, 1000)}
+    return {"itemId": random.randint(0, maximum)}
