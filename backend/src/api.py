@@ -16,7 +16,7 @@ app = FastAPI()
 # This route in particular is a GET route at "/hello" which returns the example
 # dictionary as a JSON response with the status code 200 by default.
 @app.get("/hello")
-def hello() -> dict[str, str]:
+async def hello() -> dict[str, str]:
     """Get hello message."""
     return {"message": "Hello from FastAPI"}
 
@@ -34,11 +34,11 @@ def hello() -> dict[str, str]:
 # will be returned. Note that if `item_id` isn't an integer, FastAPI will
 # return a response containing an error statement instead of our result.
 @app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None) -> dict[str, int | str | None]:
+async def read_item(item_id: int, q: str | None = None) -> dict[str, int | str | None]:
     return {"item_id": item_id, "q": q}
 
 
 @app.get("/get-random")
-def get_random_item() -> dict[str, int]:
+async def get_random_item() -> dict[str, int]:
     """Get an item with a random ID."""
     return {"item_id": random.randint(0, 1000)}
