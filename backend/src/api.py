@@ -15,35 +15,55 @@ from anyio import to_thread
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
 from pypdf import PdfReader
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-# ----------------------------
+import uvicorn
+
+
 # App + CORS
-# ----------------------------
 app = FastAPI(title="Resume Coach API (Gemini)")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten in prod
+    allow_origins=["http://localhost:3000", "*"],  # Change as needed for prod!
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# Gemini setup
+# Basic /upload Endpoint
+
+@app.post("/upload")
+async def upload_pdf(file: UploadFile = File(...)):
+    # This function checks and validates the file type
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+    try:
+        contents = await file.read()
+        # PDF processing function could go here
+        processed_result = {
+            "filename": file.filename,
+            "message": "PDF processed successfully",
+            "data": "Your processed text or data here"
+        }
+        return JSONResponse(content=processed_result, status_code=200)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+    finally:
+        await file.close()
+
+
+# Gemini & Resume Endpoints
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
-if not GEMINI_API_KEY:
-    
-    pass
-else:
+if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
 async def _gemini_generate(prompt: str) -> str:
@@ -57,14 +77,11 @@ async def _gemini_generate(prompt: str) -> str:
     def _call() -> str:
         model = genai.GenerativeModel(GEMINI_MODEL)
         resp = model.generate_content(prompt)
-        # concatenate all text parts
         parts = resp.candidates[0].content.parts
         return "".join(getattr(p, "text", "") for p in parts)
 
     return await to_thread.run_sync(_call)
 
-
-# Utilities
 MAX_PDF_BYTES = int(os.getenv("MAX_PDF_BYTES", str(10 * 1024 * 1024)))  # 10 MB
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
@@ -82,27 +99,19 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
         raise HTTPException(status_code=400, detail=f"Failed to read PDF: {e}")
 
 def make_checklist_pdf(text: str, filename: str = "resume_todo_list.pdf") -> StreamingResponse:
-    """
-    Renders plain text (the Gemini checklist) into a simple, clean PDF.
-    """
     buf = io.BytesIO()
     c = canvas.Canvas(buf, pagesize=letter)
     W, H = letter
     left, top = 72, H - 72
     y = top
-
     c.setTitle("Resume To-Do Checklist")
     c.setAuthor("Resume Coach")
-
-    # Title
     c.setFont("Helvetica-Bold", 16)
     c.drawString(left, y, "Resume To-Do Checklist")
     y -= 24
-
     c.setFont("Helvetica", 11)
     for para in text.splitlines():
         line = para.rstrip()
-        # Wrap to ~95 chars per line
         wrapped = textwrap.wrap(line, 95) if line else [""]
         for w in wrapped:
             if y < 72:
@@ -111,9 +120,7 @@ def make_checklist_pdf(text: str, filename: str = "resume_todo_list.pdf") -> Str
                 c.setFont("Helvetica", 11)
             c.drawString(left, y, w)
             y -= 14
-        # small spacing between bullets/paras
         y -= 4
-
     c.showPage()
     c.save()
     buf.seek(0)
@@ -123,7 +130,6 @@ def make_checklist_pdf(text: str, filename: str = "resume_todo_list.pdf") -> Str
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
-# ResumeDoc model (for interactive editor)
 class ResumeDocItem(BaseModel):
     id: str
     text: str
@@ -141,32 +147,24 @@ SECTION_RX = re.compile(r"^(education|experience|projects?|skills?|summary|certi
 BULLET_RX  = re.compile(r"^([-•*]|\u2022)\s+")
 
 def naive_pdf_text_to_doc(resume_text: str) -> ResumeDoc:
-    """
-    Lightweight heuristic splitter: sections by common headers, bullets by leading symbols,
-    otherwise synthesize bullets from sentence-ish lines.
-    """
     lines = [ln.strip() for ln in resume_text.splitlines() if ln.strip()]
     sections: List[ResumeDocSection] = []
     cur_name = "Experience"
     cur_items: List[ResumeDocItem] = []
     buf: List[str] = []
-
     def flush_section():
         nonlocal cur_items
         if cur_items:
             sections.append(ResumeDocSection(name=cur_name, items=cur_items.copy()))
             cur_items.clear()
-
     for ln in lines:
         if SECTION_RX.match(ln):
-
             if buf:
                 cur_items.append(ResumeDocItem(id=str(uuid.uuid4()), text=" ".join(buf)))
                 buf = []
             flush_section()
             cur_name = ln.title()
             continue
-
         if BULLET_RX.match(ln):
             if buf:
                 cur_items.append(ResumeDocItem(id=str(uuid.uuid4()), text=" ".join(buf)))
@@ -177,30 +175,21 @@ def naive_pdf_text_to_doc(resume_text: str) -> ResumeDoc:
             if len(" ".join(buf)) > 120 or ln.endswith("."):
                 cur_items.append(ResumeDocItem(id=str(uuid.uuid4()), text=" ".join(buf)))
                 buf = []
-
     if buf:
         cur_items.append(ResumeDocItem(id=str(uuid.uuid4()), text=" ".join(buf)))
     flush_section()
-
     if not sections:
         sections = [ResumeDocSection(name="Profile", items=[
             ResumeDocItem(id=str(uuid.uuid4()), text=resume_text[:300])
         ])]
-
     return ResumeDoc(title=None, sections=sections)
 
-# JSON helpers for rewrite endpoint 
 JSON_BLOCK_RX = re.compile(r"\{.*\}", re.DOTALL)
 
 def extract_json_block(s: str) -> Dict:
-    """
-    Gemini may wrap JSON in prose or code fences. Try to recover the first JSON object.
-    """
     s = s.strip()
-   
     if s.startswith("```"):
         s = s.strip("`")
-    
     try:
         return json.loads(s)
     except Exception:
@@ -214,13 +203,10 @@ def extract_json_block(s: str) -> Dict:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to parse LLM JSON: {e}")
 
-# ----------------------------
-# Endpoints
-# ----------------------------
 @app.post("/analyze-resume")
 async def analyze_resume(pdf: UploadFile = File(...), job_text: str = Form("")):
     """
-    Upload a resume PDF (and optional job description text); returns a To-Do checklist PDF from Gemini.
+    Upload a resume PDF (and optional job description text); returns a list of improvement suggestions from Gemini.
     """
     if pdf.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Please upload a PDF.")
@@ -228,7 +214,6 @@ async def analyze_resume(pdf: UploadFile = File(...), job_text: str = Form("")):
     resume_text = extract_text_from_pdf(pdf_bytes)
     if not resume_text:
         raise HTTPException(status_code=400, detail="No text found in PDF (scanned image PDFs need OCR).")
-
     prompt = f"""
 You are a professional résumé coach.
 
@@ -248,15 +233,13 @@ JOB DESCRIPTION (optional):
 RESUMÉ TEXT:
 {resume_text}
 """.strip()
-
     advice_text = await _gemini_generate(prompt)
-    return make_checklist_pdf(advice_text)
+    suggestions = [line.strip("-- * ").strip() for line in advice_text.splitlines() if line.strip()]
+    suggestions = [re.sub(r"^\d+\.\s*", "", s) for s in suggestions if s]
+    return JSONResponse(content={"suggestions": suggestions})
 
 @app.post("/extract-structure", response_model=ResumeDoc)
 async def extract_structure(pdf: UploadFile = File(...)):
-    """
-    Returns a naive structured document model from a PDF (sections + bullet items with IDs).
-    """
     if pdf.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Please upload a PDF.")
     pdf_bytes = await pdf.read()
@@ -279,12 +262,8 @@ class RewriteResponse(BaseModel):
 
 @app.post("/rewrite-bullets", response_model=RewriteResponse)
 async def rewrite_bullets(req: RewriteRequest):
-    """
-    Uses Gemini to propose 1–3 improved variants per bullet. Returns STRICT JSON.
-    """
     if not req.bullets:
         raise HTTPException(status_code=400, detail="No bullets provided.")
-
     prompt = f"""
 You rephrase résumé bullets to be sharper for ATS and recruiters.
 
@@ -302,63 +281,37 @@ Style guide: {req.style or "concise"}
 Bullets to rewrite:
 {os.linesep.join(f"- {b}" for b in req.bullets)}
 """.strip()
-
     raw = await _gemini_generate(prompt)
     data = extract_json_block(raw)
-
-    #
     if "suggestions" not in data or not isinstance(data["suggestions"], list):
         raise HTTPException(status_code=500, detail="LLM JSON missing 'suggestions' list.")
-
- 
     return RewriteResponse(**data)
 
 class ExportRequest(BaseModel):
     doc: ResumeDoc
     filename: Optional[str] = "resume_updated.pdf"
 
+
 @app.post("/export-pdf")
 async def export_pdf(req: ExportRequest):
     """
-    Renders a ResumeDoc into a clean PDF with sections and bullets.
+    Returns the resume suggestions as a flat list of strings (one per item).
+    Each section header and bullet point becomes a separate list element.
     """
-    buf = io.BytesIO()
-    c = canvas.Canvas(buf, pagesize=letter)
-    W, H = letter
-    left, top = 72, H - 72
-    y = top
+    suggestions = []
+    
+    # Iterate through each section in the resume document
+    for section in req.doc.sections:
+        # Add section name as a header
+        suggestions.append(f"## {section.name}")
+        
+        # Add each item/bullet point in the section
+        for item in section.items:
+            suggestions.append(item.text)
+    
+    # Return as JSON with a list of suggestions
+    return JSONResponse(content={"suggestions": suggestions})
 
-    title = req.doc.title or "Updated Résumé"
-    c.setTitle(title)
-    c.setAuthor("Resume Coach")
 
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(left, y, title)
-    y -= 24
-
-    for sec in req.doc.sections:
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(left, y, sec.name)
-        y -= 16
-        c.setFont("Helvetica", 10)
-        for it in sec.items:
-            wrapped = textwrap.wrap(it.text, 95) if it.text else [""]
-            for i, line in enumerate(wrapped):
-                prefix = "• " if i == 0 else "  "
-                if y < 72:
-                    c.showPage()
-                    y = top
-                    c.setFont("Helvetica", 10)
-                c.drawString(left, y, prefix + line)
-                y -= 12
-            y -= 4
-        y -= 6
-
-    c.showPage()
-    c.save()
-    buf.seek(0)
-    return StreamingResponse(
-        buf,
-        media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{req.filename or "resume_updated.pdf"}"'}
-    )
+if __name__ == "__main__":
+    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
