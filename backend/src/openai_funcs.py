@@ -14,3 +14,19 @@ def do_something(client: OpenAI):
     store=True,
 )
     print(response.output_text)
+
+def get_issues(client: OpenAI, user_input: str):
+    response= client.responses.create(
+        model="gpt-5-nano",
+        input=user_input,
+        instructions="From the given unordered list/articles, give the top 5 (or if less than 5 articles, rank the given ones) most relevant news articles. Give only rankings, no extra fluff.",
+        store=True
+    )
+    return response.output_text
+
+"""
+1. Woodchucks Vs. Moles 2, releases the 30th of November!
+2. Gibberish Co. builds a zero waste factory near a lake
+3. Super Evil Foundation dumps coal into water treatment facility
+"""
+

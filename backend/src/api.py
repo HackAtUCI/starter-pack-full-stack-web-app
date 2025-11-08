@@ -35,3 +35,7 @@ async def get_random_item(maximum: int) -> dict[str, int]:
 @app.get("/chatgpt_haiku")
 async def get_haiku():
     gpt.do_something(openai_client)
+
+@app.get("/ask_chatgpt")
+async def get_issue(user_input: str):
+    print(gpt.get_issues(openai_client, user_input))
