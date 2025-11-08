@@ -1,3 +1,6 @@
-const Search = () => <h1>HELLO! there</h1>;
+import GoogleSearchBar from "@/components/GoogleSearchBar";
+
+
+const Search = () => <GoogleSearchBar></GoogleSearchBar>;
 
 export default Search;

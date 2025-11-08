@@ -6,7 +6,7 @@ import "./App.css";
 import RandomItem from "@/components/RandomItem";
 import { Routes, Route, Link } from "react-router-dom";
 import React from 'react'
-import GoogleSearchBar from './GoogleSearchBar'
+import GoogleSearchBar from '@/components/GoogleSearchBar';
 
 function App() {
   return (
