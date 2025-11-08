@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useCallback, useEffect} from 'react'
 import { Search, Mic } from 'lucide-react'
  
 const sampleData = [
