@@ -29,7 +29,7 @@ don't conflict with the ones on your main system by running:
 ### macOS/Unix
 
 ```bash
-$ python3 -m venv .venv
+$ python3 -m venv .venbash
 $ source .venv/bin/activate
 ```
 
