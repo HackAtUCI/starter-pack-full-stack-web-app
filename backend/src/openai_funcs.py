@@ -3,8 +3,9 @@ import os
 
 
 def initialize_connection():
-    return OpenAI(
-    api_key=os.environ['OPENAI_API_KEY'])
+    key=os.environ['OPENAI_API_KEY']
+    key = (key[1: len(key)-1])
+    return OpenAI(api_key=key)
 
 def do_something(client: OpenAI):
     response = client.responses.create(
