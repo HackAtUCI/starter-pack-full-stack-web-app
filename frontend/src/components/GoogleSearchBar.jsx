@@ -15,13 +15,23 @@ const GoogleSearchBar = () => {
         }
     }
 
-    const handleSearch = useCallback(
-    debounce((term) => {
-      // send term to backend
-      console.log(term);
+  const handleSearch = useCallback(
+    debounce(async (term) => {
+      if (!term.trim()) {
+        setSearchResults([])
+        return
+      }
+
+      try {
+        // const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`)
+        // const data = await response.json()
+        // setSearchResults(data.results)
+      } catch (error) {
+        console.error('Search failed:', error)
+      }
     }, 300),
-    [],
-)
+    []
+  )
  
   useEffect(() => {
     handleSearch(searchTerm)
