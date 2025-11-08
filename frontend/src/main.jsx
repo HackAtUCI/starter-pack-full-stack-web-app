@@ -5,7 +5,7 @@ import Search from "./pages/search.jsx"
 import "./index.css";
 import {BrowserRouter} from "react-router-dom";
 import { Routes, Route, Link } from "react-router-dom";
-import {Results} from "./pages/results.jsx"
+import Results from "./pages/results.jsx"
 /*
 This code renders our project so it can be viewed in a browser. 
 */
