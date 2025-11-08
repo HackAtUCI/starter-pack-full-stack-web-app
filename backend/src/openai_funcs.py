@@ -7,19 +7,12 @@ def initialize_connection():
     key = (key[1: len(key)-1])
     return OpenAI(api_key=key)
 
-def do_something(client: OpenAI):
-    response = client.responses.create(
-    model="gpt-5-nano",
-    input="write a haiku about ai",
-    store=True,
-)
-    print(response.output_text)
-
 def get_ranks(client: OpenAI, user_input: str):
     response= client.responses.create(
-        model="gpt-5-nano",
+        model="gpt-5-mini",
         input=user_input,
-        instructions="From the given unordered list/database of items, give the top 5 (or if less than 5 articles, rank the given ones) most relevant items to the user's given query. Give only rankings, no extra fluff.",
+        tools=[{"type": "web_search"}],
+        instructions="browse for the top 5 (or if less than 5 articles, rank the given ones) most relevant free news articles to the user's given query. With each entry, each entry has items that should follow in the exact order of: title, link, and direct image address. No extra fluff.",
         store=True
     )
     return response.output_text
