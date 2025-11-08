@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+
+import RandomItem from "@/components/RandomItem";
 
 /*
 This is the starting point of our application. Here, we can begin coding 
@@ -12,25 +15,6 @@ With App.jsx, we can also define global variables and routes to store informatio
 */
 function App() {
 	const [count, setCount] = useState(0);
-	const [randomItem, setRandomItem] = useState(null);
-
-	async function getRandomItem() {
-		/*
-		Because of the server proxy we set up in our Vite config, there's no
-		more need to specify localhost for the backend! Just use `/api/path`.
-
-		We query the backend and store its response into a state variable,
-		where we display it in our JSX below.
-		*/
-
-		const res = await fetch(`/api/get-random`);
-		const data = await res.json();
-		setRandomItem(data["item_id"]);
-	}
-
-	useEffect(() => {
-		getRandomItem();
-	}, []);
 
 	return (
 		<>
@@ -49,12 +33,7 @@ function App() {
 					Edit <code>src/App.jsx</code> and save to test HMR
 				</p>
 
-				{/* Here's a trick you can use! If you want to render a JSX element only when a
-				state variable becomes not `null` (i.e. truthy), you can do a short circuit
-				operation with `&&`. */}
-				{randomItem && (
-					<p>The item retrieved from the backend has an ID of {randomItem}</p>
-				)}
+				<RandomItem maximum={1000} />
 			</div>
 			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
 		</>
