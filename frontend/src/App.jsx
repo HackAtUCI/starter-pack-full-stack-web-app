@@ -3,6 +3,11 @@ import { useState } from "react";
 */
 import axios from 'axios';
 
+function GiveList(text) {
+  const responseList = text.split("|")
+  return responseList
+}
+
 function FileUpload() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
@@ -31,6 +36,7 @@ function FileUpload() {
       const response = await axios.post('http://localhost:8000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          
         },
       });
       
@@ -66,9 +72,13 @@ function FileUpload() {
       {result && (
         <div className="results">
           <h3>Results:</h3>
-          <p><strong>Filename:</strong> {result.filename}</p>
-          <p><strong>Message:</strong> {result.message}</p>
-          <p><strong>Data:</strong> {result.data}</p>
+          <p><strong>Message:</strong>
+          <ul>
+            {GiveList(result.message).map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+          </p>
         </div>
       )}
     </div>
