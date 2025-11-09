@@ -7,13 +7,14 @@ export const Card = () => {
         <div className ="card-container">
         <div className="card">
             <img scr ="https://picsum.photos/200/300" alt="Card Image" className="card-img"/>
-            <h1 className="card-title">policy 1</h1>
-            <p className="card-text">
-                basically this and that happened and you can do this</p>
-            <a href="cardPage" className="card-btn"> 
-                Fundraisers and Petitions
-    
-            </a>
+            <div className="card-stuff">
+                <h1 className="card-title">policy 1</h1>
+                <p className="card-text">
+                    basically this and that happened and you can do this</p>
+                <a href="cardPage" className="card-btn"> 
+                    Fundraisers and Petitions
+                </a>
+            </div>
             <HandFist />
         </div>
     </div>
