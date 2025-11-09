@@ -6,15 +6,15 @@ export const Card = () => {
     return ( 
         <div className ="card-container">
         <div className="card">
-            <img scr ="https://picsum.photos/200/300" alt="Card Image" className="card-img"/>
+            <img src ="https://picsum.photos/200/300" alt="Card Image" className="card-img"/>
             <div className="card-stuff">
                 <h1 className="card-title">policy 1</h1>
                 <p className="card-text">
                     basically this and that happened and you can do this</p>
-                <a href="cardPage" className="card-btn"> 
+                <a href="./following" className="card-btn"> 
                     Fundraisers and Petitions
                 </a>
-            </div>
+            </div>      
             <HandFist />
         </div>
     </div>

@@ -1,0 +1,19 @@
+/* Bookmark.css — import into the file using `import "./Bookmark.css";` */
+.bm-root { max-width: 720px; margin: 1.5rem auto; padding: 1rem; font-family: system-ui, Arial, sans-serif; }
+.bm-form { display:flex; gap:0.5rem; margin-bottom:1rem; }
+.bm-input { flex:1; padding:0.5rem 0.75rem; border:1px solid #ddd; border-radius:6px; }
+.bm-add { padding:0.5rem 0.75rem; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+.bm-list-wrap { background:#fff; border:1px solid #eee; border-radius:8px; padding:0.75rem; box-shadow:0 4px 12px rgba(0,0,0,0.03); }
+.bm-heading { margin:0 0 0.5rem 0; font-size:1rem; color:#111827; }
+.bm-empty { color:#6b7280; }
+.bm-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.5rem; }
+.bm-item { display:flex; align-items:center; justify-content:space-between; padding:0.5rem; border-radius:6px; border:1px solid #f3f4f6; }
+.bm-item.fav { background: linear-gradient(90deg,#fffef6,#fffdf0); border-color:#f5e1a4; }
+.bm-left { display:flex; gap:0.5rem; align-items:center; }
+.bm-fav-btn { background:transparent; border:none; font-size:1.1rem; cursor:pointer; }
+.bm-meta { display:flex; flex-direction:column; }
+.bm-link { font-weight:600; color:#0f172a; text-decoration:none; }
+.bm-url { font-size:0.8rem; color:#6b7280; }
+.bm-actions { display:flex; gap:0.5rem; }
+.bm-visit, .bm-del { padding:0.35rem 0.6rem; border-radius:6px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; }
+.bm-del { border-color:#fca5a5; color:#b91c1c; }
