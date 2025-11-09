@@ -29,7 +29,7 @@
 }
 .card .card-title{
     font-family: Arial, sans-serif;
-    margin: 0;
+    margin: 1;
     color: hsl(0, 0%, 20%);
 }
 .card .card-text{
