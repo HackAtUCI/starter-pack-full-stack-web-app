@@ -14,7 +14,7 @@ html, body {
   margin: 0 auto;
   padding: 0;
   font-family: Arial, sans-serif;
-  text-align: left;        /* fixed typo: 'lef' → 'left' */
+  text-align: left;        
 }
 
 /* Header Section */
