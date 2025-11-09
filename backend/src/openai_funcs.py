@@ -1,27 +1,28 @@
 from openai import OpenAI
 import os
+import json
 
 
 def initialize_connection():
     key=os.environ['OPENAI_API_KEY']
-    key = (key[1: len(key)-1])
     return OpenAI(api_key=key)
 
-def get_ranks(client: OpenAI, user_input: str):
+def get_ranks(client: OpenAI, user_input: str, num_of_articles: int):
     response= client.responses.create(
         model="gpt-5-mini",
         input=user_input,
         tools=[{"type": "web_search"}],
-        instructions="browse for the top 5 (or if less than 5 articles, rank the given ones) most relevant free news articles to the user's given query. With each entry, each entry has items that should follow in the exact order of: title, link, and direct image address. No extra fluff.",
+        instructions=f"browse for the top {num_of_articles} (or if less than {num_of_articles} articles, rank the given ones) most relevant free news articles to the user's given query. With each entry, each entry is marked by only a single `, and has items that are separated by a single ` as well and the items follow in the exact order of: title and link. No extra information or text.",
         store=True
     )
     return response.output_text
 
-"""
-What's up with the environment?
-
-1. Woodchucks Vs. Moles 2, releases the 30th of November!
-2. Gibberish Co. builds a zero waste factory near a lake
-3. Super Evil Foundation dumps coal into water treatment facility
-"""
-
+def parse_gpt_output(chat_input: str, num_of_articles: int):
+    output_dict = dict()
+    articles_list = chat_input.split('`')
+    articles_list.pop(0)
+    for n in range(0, num_of_articles):
+        output_dict[n] = articles_list[0].strip(), articles_list[1].strip()
+        articles_list.pop(0)
+        articles_list.pop(0)
+    return json.dumps(output_dict)

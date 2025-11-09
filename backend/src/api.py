@@ -14,5 +14,6 @@ app = FastAPI()
 openai_client = gpt.initialize_connection()
 
 @app.get("/api/issues")
-async def get_ranks(user_input: str):
-    print(gpt.get_ranks(openai_client, user_input))
+async def get_ranks(user_input: str, num_of_articles: int):
+    output = gpt.get_ranks(openai_client, user_input, num_of_articles)
+    return gpt.parse_gpt_output(output, num_of_articles)
