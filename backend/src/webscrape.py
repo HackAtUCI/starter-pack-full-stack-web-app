@@ -15,7 +15,7 @@ def webscrape(search):
         if link.get('href').startswith("/p/"):
             links.append(link.get('href'))
 
-    json_body = {}    
+    json_body = []    
 
     for key, url in enumerate(links[:3]):
         driver = webdriver.Chrome()
@@ -26,6 +26,9 @@ def webscrape(search):
         title = petition_html.find("h1", class_ =["petition-title","corgi-8pem40"]).text
         img = "https:"+ petition_html.find('img',class_="corgi-ife7d0").get('src')
         
-        json_body[key] = {"title": title, "image": img, "url": full_url}
+        json_body[key].append{"title": title, "image": img, "url": full_url}
+    return json_body
+
+
 
 

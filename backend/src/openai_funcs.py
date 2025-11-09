@@ -4,7 +4,6 @@ import os
 
 def initialize_connection():
     key=os.environ['OPENAI_API_KEY']
-    key = (key[1: len(key)-1])
     return OpenAI(api_key=key)
 
 def get_ranks(client: OpenAI, user_input: str):
