@@ -5,7 +5,7 @@ $ fastapi dev src/api.py
 """
 
 import random
-
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import openai_funcs as gpt
 import webscrape 
