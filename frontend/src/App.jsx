@@ -1,43 +1,88 @@
 import { useState } from "react";
-
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-
-import RandomItem from "@/components/RandomItem";
-
 /*
-This is the starting point of our application. Here, we can begin coding 
-and transforming this page into whatever best suits our needs. 
-For example, we can start by creating a login page, home page, or an about section; 
-there are many ways to get your application up and running. 
-With App.jsx, we can also define global variables and routes to store information as well as page navigation.
 */
-function App() {
-	const [count, setCount] = useState(0);
+import axios from 'axios';
 
-	return (
-		<>
-			<div>
-				<a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank" rel="noreferrer">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-			</div>
-			<h1>Vite + React</h1>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-				<p>
-					Edit <code>src/App.jsx</code> and save to test HMR
-				</p>
-
-				<RandomItem maximum={1000} />
-			</div>
-			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-		</>
-	);
+function GiveList(text) {
+  const responseList = text.split("|")
+  return responseList
 }
 
-export default App;
+function FileUpload() {
+  const [file, setFile] = useState(null);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setError(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!file) {
+      setError("Please select a PDF file");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await axios.post('http://localhost:8000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          
+        },
+      });
+      
+      setResult(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.detail || "Error uploading file");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="file-upload-container">
+      <h2>PDF File Processor</h2>
+      
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="file" 
+          accept=".pdf"
+          onChange={handleFileChange}
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Processing...' : 'Upload PDF'}
+        </button>
+      </form>
+
+      {error && (
+        <div className="error">
+          <p>Error: {error}</p>
+        </div>
+      )}
+
+      {result && (
+        <div className="results">
+          <h3>Results:</h3>
+          <p><strong>Message:</strong>
+          <ul>
+            {GiveList(result.message).map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default FileUpload;
