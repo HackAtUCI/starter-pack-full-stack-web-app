@@ -17,15 +17,16 @@ const GoogleSearchBar = () => {
 
   const handleSearch = useCallback(
     debounce(async (term) => {
-      if (!term.trim()) {
-        setSearchResults([])
-        return
-      }
+      // if (!term.trim()) {
+      //   setSearchResults([])
+      //   return
+      // }
 
       try {
-        // const response = await fetch(`/api/search?q=${encodeURIComponent(term)}`)
-        // const data = await response.json()
-        // setSearchResults(data.results)
+        console.log(term)
+        const response = await fetch(`/api/issues?user_input=${encodeURIComponent(term)}&num_of_articles=5`)
+        const data = await response.json()
+        console.log(data)
       } catch (error) {
         console.error('Search failed:', error)
       }
@@ -33,21 +34,21 @@ const GoogleSearchBar = () => {
     []
   )
  
-  useEffect(() => {
-    handleSearch(searchTerm)
-  }, [searchTerm, handleSearch])
- 
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
+
+  const handleInputChange = (e) => { setSearchTerm(e.target.value) }
+
 
 
   return (
+
     <div className="flex min-h-screen flex-col items-center bg-white p-4">
-      <form
-        onSubmit={handleSearch}
-        className="mb-8 w-full max-w-2xl"
-      >
+        <form
+    onSubmit={(e) => {
+    e.preventDefault()
+    handleSearch(searchTerm)
+  }}
+  className="mb-8 w-full max-w-2xl"
+  >
         <div className="relative">
           <input
             type="text"

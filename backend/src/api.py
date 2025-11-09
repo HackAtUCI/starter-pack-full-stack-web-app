@@ -16,4 +16,7 @@ openai_client = gpt.initialize_connection()
 @app.get("/api/issues")
 async def get_ranks(user_input: str, num_of_articles: int):
     output = gpt.get_ranks(openai_client, user_input, num_of_articles)
+    #return output
     return gpt.parse_gpt_output(output, num_of_articles)
+
+#"Government shutdowns in U.S."

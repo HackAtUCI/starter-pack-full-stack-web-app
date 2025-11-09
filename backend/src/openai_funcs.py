@@ -23,6 +23,9 @@ def parse_gpt_output(chat_input: str, num_of_articles: int):
     articles_list.pop(0)
     for n in range(0, num_of_articles):
         output_dict[n] = articles_list[0].strip(), articles_list[1].strip()
+        print(articles_list[0].strip(), articles_list[1].strip())
         articles_list.pop(0)
         articles_list.pop(0)
-    return json.dumps(output_dict)
+    return output_dict
+
+"What is happening with government shutdowns in the U.S.?"
