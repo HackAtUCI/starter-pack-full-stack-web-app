@@ -36,6 +36,7 @@ function FileUpload() {
       const response = await axios.post('http://localhost:8000/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+        
           
         },
       });
@@ -49,8 +50,18 @@ function FileUpload() {
   };
 
   return (
+
+    
     <div className="file-upload-container">
-      <h2>PDF File Processor</h2>
+      <div className="logo-container" style={{ textAlign: 'center', padding: '20px' }}>
+        <img 
+          src="/logo.png" 
+          alt="Un-Unemployed Logo" 
+          style={{ maxWidth: '200px', height: 'auto' }}
+
+        />
+      </div>
+      <h2 className="center">Un-Unemployed</h2>
       
       <form onSubmit={handleSubmit}>
         <input 
@@ -75,7 +86,12 @@ function FileUpload() {
           <p><strong>Message:</strong>
           <ul>
             {GiveList(result.message).map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index}><form class="my-form">
+              <div>
+                <input id="check-1" type="checkbox" />
+                <label for="check-1" aria-setsize={10}>{item}</label>
+              </div>
+            </form></li>
             ))}
           </ul>
           </p>

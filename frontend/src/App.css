@@ -3,100 +3,147 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
 }
-
+img{
+  margin: auto;
+}
+.center {
+  margin: auto;
+}
 /* Root container */
 #root {
   display: flex;
-  flex-direction: column;  /* stack header, main, footer vertically */
-  min-height: 100vh;       /* full viewport height */
+  flex-direction: column;
+  min-height: 100vh;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0;
   font-family: Arial, sans-serif;
-  text-align: left;        
+  text-align: center;  
 }
 
 /* Header Section */
 .header {
   width: 100%;
   background-color: #f2f2f2;
-  padding: 20px 0;        
+  padding: 20px 0;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: sticky;        /* stays at top while scrolling */
-  top: 0;                  /* flush to top */
+  position: sticky;
+  top: 0;
   z-index: 1000;
-  font-size: 24px;         /* added missing semicolon */
+  font-size: 24px;
+  margin: auto;
 }
 
 /* Header Titles */
 .header-title {
-  margin: 0;                
+  margin: 0;
   font-size: 3.5rem;
-  color: #4CAF50;          
+  color: #4CAF50;
+  margin: auto;
 }
 
 .header-subtitle {
   margin: 0;
   font-weight: normal;
   font-size: 1.2rem;
-  color: #FF5722;          
+  color: #FF5722;
+  margin: auto;
 }
 
 /* Main Content */
 .main-content {
-  flex: 1;                  /* grow to fill remaining space */
+  flex: 1;
   padding: 20px 0;
-}
-/* Reset default browser spacing */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+  display: flex;              /* Added */
+  flex-direction: column;     /* Added */
+  align-items: center;        /* Added - centers horizontally */
+  justify-content: center;
+  margin: auto;    /* Added - centers vertically */
 }
 
-/* Root container */
-#root {
+/* File Upload Container */
+.file-upload-container {
+  display: flex;              /* Added */
+  flex-direction: column;     /* Added */
+  align-items: center;        /* Added */
+  max-width: 600px;           /* Optional: limit width */
+  width: 100%;                /* Added */
+  padding: 20px;              /* Added */
+  margin:auto;
+}
+
+/* From Uiverse.io by cbolson */ 
+.my-form {
+  --_clr-primary: #666;
+  --_clr-hover: #f33195;
+  --_clr-checked: #127acf;
+  margin: auto;
+}
+.my-form > div {
+  --_clr-current: var(--_clr-primary);
+
   display: flex;
-  flex-direction: column;  /* stack header, main, footer vertically */
-  min-height: 100vh;       /* full viewport height */
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  text-align: left;        /* fixed typo: 'lef' → 'left' */
+  align-items: center;
+  gap: 0.5rem;
+  margin: auto;
+}
+.my-form > div + div {
+  margin-block-start: 0.5rem;
+  margin: auto;
+}
+.my-form label {
+  cursor: pointer;
+  color: var(--_clr-current);
+  transition: color 150ms ease-in-out;
+  margin: auto;
 }
 
-/* Header Section */
-.header {
-  width: 100%;
-  background-color: #f2f2f2;
-  padding: 20px 0;        
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: sticky;        /* stays at top while scrolling */
-  top: 0;                  /* flush to top */
-  z-index: 1000;
-  font-size: 24px;         /* added missing semicolon */
+/* styled checkbox */
+.my-form input[type="checkbox"] {
+  appearance: none;
+  outline: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  aspect-ratio: 1;
+  padding: 0.25rem;
+  background: rgb(2, 2, 78);
+  border: 1px solid var(--_clr-current);
+  border-radius: 2px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  margin: auto;
+}
+.my-form input[type="checkbox"]::after {
+  content: "\2714";
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+  color: var(--_clr-checked);
+  font-size: inherit;
+  font-family: inherit;
+  margin: auto;
 }
 
-/* Header Titles */
-.header-title {
-  margin: 0;                
-  font-size: 3.5rem;
-  color: #4CAF50;          
+.my-form label:hover,
+.my-form input[type="checkbox"]:focus-visible,
+.my-form input[type="checkbox"]:focus-visible + label,
+.my-form input[type="checkbox"]:hover,
+.my-form input[type="checkbox"]:hover + label {
+  --_clr-current: var(--_clr-hover);
+}
+.my-form input[type="checkbox"]:focus-visible::after,
+.my-form input[type="checkbox"]:hover::after {
+  opacity: 0.5;
+  color: var(--_clr-hover);
 }
 
-.header-subtitle {
-  margin: 0;
-  font-weight: normal;
-  font-size: 1.2rem;
-  color: #FF5722;          
+.my-form input[type="checkbox"]:checked + label:not(:hover),
+.my-form input[type="checkbox"]:checked:not(:hover) {
+  --_clr-current: var(--_clr-checked);
 }
-
-/* Main Content */
-.main-content {
-  flex: 1;                  /* grow to fill remaining space */
-  padding: 20px 0;
+.my-form input[type="checkbox"]:checked::after {
+  opacity: 1;
 }
